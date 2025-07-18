@@ -228,11 +228,11 @@ const StatusGrid = () => {
                                     ></span>
                                 </span>
 
-                                {/* Buttons with pointer events enabled */}
+                                {/* Buttons with pointer events enabled
                                 <div className="col-span-4 flex justify-end gap-4 mt-2 pointer-events-auto">
                                     <button className="text-blue-600 text-sm font-medium hover:underline" onClick={() => console.log('Edit', user.id)}>Edit</button>
                                     <button className="text-red-600 text-sm font-medium hover:underline" onClick={() => console.log('Delete', user.id)}>Delete</button>
-                                </div>
+                                </div> */}
                             </div>
                         ))}
                     </div>

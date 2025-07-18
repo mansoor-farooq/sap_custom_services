@@ -5,22 +5,31 @@ import Login from '../pages/Login'
 // import Signup from '../pages/Signup'
 import StatusGrid from '../pages/StatusGrid'
 import Sapservice from '../pages/sapservice'
-
+import { Fragment } from 'react'
+import PrivateRoutes from './Private_route'; // adjust the path if needed
+import YoungBazerHealth from '../pages/YoungBazerHealth'
 
 const Addroute = () => {
     return (
-        <Routes>
+        <Fragment>
+            <Routes>
+                <Route element={<PrivateRoutes />} >
+                    {""}
+                    <Route path='/' element={<Home />} />
+                    <Route path='/sapservices' element={<StatusGrid />} />
+                    <Route path='/youngBazer' element={<YoungBazerHealth />} />
+                    <Route path='/statusgrid' element={<Sapservice />} />
+                </Route>
+                <Route path='/login' element={<Login />} />
+                <Route path='*' element={<NotFoundPage />} />
+            </Routes>
+        </Fragment>
 
 
-            <Route path='/' element={<Home />} />
-            <Route path='*' element={<NotFoundPage />} />
-            <Route path='/login' element={<Login />} />
-            <Route path='/sapservices' element={<StatusGrid />} />
-            {/* <Route path='/signup' element={<Signup />} /> */}
-            <Route path='/statusgrid' element={<Sapservice />} />
-
-        </Routes>
     )
 }
 
 export default Addroute
+
+
+

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import PrivateRoutes from '../routes/Private_route';
 
 const Login = () => {
     const [email, setEmail] = useState('');
@@ -8,26 +9,47 @@ const Login = () => {
     // const [rememberMe, setRememberMe] = useState(false);
     const [showPassword, setShowPassword] = useState(false);
     const navigate = useNavigate();
+
+    const dumyatanpt = [{
+        id: 1001,
+        name: "Admin",
+        email: "admin@gmail.com",
+        password: "Admin@123"
+    },
+    {
+        id: 1002,
+        name: "Mansoor",
+        email: "mansoorturk757@gmail.com",
+        password: "Mansoor@123"
+    }
+    ];
+
     const handleSubmit = (e) => {
         e.preventDefault();
         // Handle login logic here
         console.log('Email:', email);
         console.log('Password:', password);
-
-        const dumyatanpt = {
-            email: "admin@gmail.com",
-            password: "Admin@123"
-        };
-
-        if (email === dumyatanpt.email && password === dumyatanpt.password) {
+        // const matchedUser = dumatanpt.find(
+        //     user => user.email === email && user.password === password
+        // );
+        const matchedUser = dumyatanpt.find(
+            user => user.email.toLowerCase() === email.trim().toLowerCase() && user.password === password
+        );
+        if (matchedUser) {
             Swal.fire({
                 title: 'Login Successful',
-                text: 'Welcome back!',
+                text: `Welcome back, ${matchedUser.name}!`,
                 icon: 'success',
                 confirmButtonText: 'OK',
+            }).then(() => {
+                localStorage.setItem('User_Data', JSON.stringify(matchedUser));
+                localStorage.setItem('isLoggedIn', 'true');
+                navigate('/');
             });
-            navigate('/')
-        } else {
+            setEmail('');
+            setPassword('');
+        }
+        else {
             Swal.fire({
                 title: 'Login Failed',
                 text: 'Invalid email or password.',
@@ -35,14 +57,7 @@ const Login = () => {
                 confirmButtonText: 'Try Again',
             });
         }
-
-
     };
-
-
-
-
-
     return (
         <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-indigo-50 to-purple-50 p-4">
             <div className="relative bg-white rounded-3xl shadow-2xl overflow-hidden max-w-md w-full p-8 sm:p-10 transform transition-all duration-500 hover:scale-[1.01] hover:shadow-3xl">
@@ -133,6 +148,7 @@ const Login = () => {
                     </div> */}
                 </div>
             </div>
+            <PrivateRoutes dumyatanpt={dumyatanpt} />
         </div>
     );
 };

@@ -571,6 +571,8 @@ import {
 } from '@headlessui/react';
 import { Bars3Icon, XMarkIcon } from '@heroicons/react/24/outline';
 import { ChevronDownIcon } from '@heroicons/react/20/solid';
+import { useNavigate } from 'react-router-dom';
+import Swal from 'sweetalert2';
 
 // Dropdown data
 const services = [
@@ -579,7 +581,7 @@ const services = [
 ];
 
 const dynamicServices = [
-    { name: 'Dynamic 1', description: 'Dynamic desc 1', href: '#', icon: null },
+    { name: 'YoungBazer Backend', description: 'YoungBazer Backend', href: '/youngBazer', icon: null },
     { name: 'Dynamic 2', description: 'Dynamic desc 2', href: '#', icon: null },
 ];
 
@@ -588,9 +590,30 @@ const sscpServices = [
     { name: 'SSCP 2', description: 'SSCP desc 2', href: '#', icon: null },
 ];
 
-
 const Header = () => {
     const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+    const navigate = useNavigate();
+
+    const userData = JSON.parse(localStorage.getItem('User_Data'));
+
+
+
+    const handleLogout = () => {
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You will be logged out.",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, logout',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                localStorage.removeItem('User_Data');
+                Swal.fire('Logged Out!', 'You have successfully logged out.', 'success');
+                navigate('/login');
+            }
+        });
+    };
 
     const renderDropdown = (label, data) => (
         <Popover className="relative">
@@ -674,12 +697,42 @@ const Header = () => {
                         {renderDropdown('Services', services)}
                         {renderDropdown('Dynamic', dynamicServices)}
                         {renderDropdown('SSCP', sscpServices)}
-                        <a
-                            href="/login"
-                            className="text-sm font-semibold text-black px-3 py-1 rounded-md hover:scale-105 transition"
-                        >
-                            Login
-                        </a>
+
+                        {userData ? (
+                            <Popover className="relative">
+                                {({ open }) => (
+                                    <>
+                                        <PopoverButton className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100">
+                                            <span className="text-sm font-semibold text-black">
+                                                {userData.name}
+                                            </span>
+                                            <ChevronDownIcon className="h-4 w-4 text-black" />
+                                        </PopoverButton>
+                                        <PopoverPanel className="absolute right-0 z-30 mt-2 w-56 bg-white rounded-md shadow-lg ring-1 ring-black/5">
+                                            <div className="p-4 border-b">
+                                                <p className="text-sm font-medium text-gray-900">{userData.name}</p>
+                                                <p className="text-sm text-gray-600">{userData.email}</p>
+                                            </div>
+                                            <button
+                                                onClick={handleLogout}
+                                                className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50"
+                                            >
+                                                Logout
+                                            </button>
+                                        </PopoverPanel>
+                                    </>
+                                )}
+                            </Popover>
+                        ) : (
+                            <a
+                                href="/login"
+                                className="text-sm font-semibold text-black px-3 py-1 rounded-md hover:scale-105 transition"
+                            >
+                                Login
+                            </a>
+                        )}
+
+
                     </div>
                 </nav>
             </div>
@@ -717,7 +770,7 @@ const Header = () => {
 
                                 {/* Navigation links */}
                                 <div className="space-y-3">
-                                    <a href="/" className="block text-sm font-semibold text-black">Home</a>
+                                    <a href="/" className="block text-sm font-semibold text-black hover:text-indigo-600 transition-all duration-150">Home</a>
 
                                     {[
                                         ['Services', services],
@@ -747,7 +800,41 @@ const Header = () => {
                                         </Disclosure>
                                     ))}
 
-                                    <a href="/login" className="block text-sm font-semibold text-black">Login</a>
+                                    {userData ? (
+                                        <Popover className="relative">
+                                            {({ open }) => (
+                                                <>
+                                                    <PopoverButton className="flex items-center space-x-2 px-3 py-2 rounded-md hover:bg-gray-100">
+                                                        <span className="text-sm font-semibold text-black">
+                                                            {userData.name}
+                                                        </span>
+                                                        <ChevronDownIcon className="h-4 w-4 text-black" />
+                                                    </PopoverButton>
+                                                    <PopoverPanel className="absolute right-0 z-30 mt-2 w-56 bg-white rounded-md shadow-lg ring-1 ring-black/5">
+                                                        <div className="p-4 border-b">
+                                                            <p className="text-sm font-medium text-gray-900">{userData.name}</p>
+                                                            <p className="text-sm text-gray-600">{userData.email}</p>
+                                                        </div>
+                                                        <button
+                                                            onClick={handleLogout}
+                                                            className="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50"
+                                                        >
+                                                            Logout
+                                                        </button>
+                                                    </PopoverPanel>
+                                                </>
+                                            )}
+                                        </Popover>
+                                    ) : (
+                                        <a
+                                            href="/login"
+                                            className="text-sm font-semibold text-black px-3 py-1 rounded-md hover:scale-105 transition"
+                                        >
+                                            Login
+                                        </a>
+                                    )}
+
+
                                 </div>
                             </motion.div>
                         </div>
